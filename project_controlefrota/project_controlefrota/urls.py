@@ -8,5 +8,9 @@ urlpatterns = patterns('',
     # url(r'^$', 'project_controlefrota.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
+    url(r'^cadastra_servidor/$', 
+      'appfrota.views.servidor.cadastra_servidor', 
+      name='cadastra_servidor'),
+
     url(r'^admin/', include(admin.site.urls)),
 )
