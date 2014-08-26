@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block corpo %}
+    <form action="." method="POST">
+        {% csrf_token %}
+        Login: {{ form.username }} <br>
+        Senha: {{ form.password }} <br>
+        {% if form.errors %}
+            <label>Ops! Algo de errado, tente novamente</label>
+        {% endif %}
+            <input type="submit" value="Entrar">
+        </div>  
+    </form>
+{% endblock %}
