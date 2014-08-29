@@ -15,4 +15,6 @@ urlpatterns = patterns('',
     url(r'^cadastra_servidor/$', 'app_frota.views.servidor.cadastra_servidor', name='cadastra_servidor'),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^/', 'appfrota.views.autenticacao.login'),
+    url(r'^login/$', 'django.contrib.auth.views.login', {"template_name": "login.html"}),
 )

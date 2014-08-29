@@ -53,9 +53,6 @@ ROOT_URLCONF = 'project_controlefrota.urls'
 WSGI_APPLICATION = 'project_controlefrota.wsgi.application'
 
 
-<<<<<<< HEAD:project_controlefrota/project_controlefrota/settings/base.py
-
-=======
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
@@ -69,7 +66,6 @@ DATABASES = {
         'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
->>>>>>> origin/master:project_controlefrota/project_controlefrota/settings.py
 
 
 # Internationalization
@@ -94,45 +90,6 @@ LOGIN_URL = "/login/"
 LOGIN_URL = "/logout/"
 LOGIN_REDIRECT_URL = "/"
 
-STATICFILES_DIRS = (
-    os.path.join(os.path.dirname(__file__), '../../static'),
-)
-
 TEMPLATE_DIRS = (
-<<<<<<< HEAD:project_controlefrota/project_controlefrota/settings/base.py
-    os.path.join(os.path.dirname(__file__), '../../templates')
-)
-
-
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    }
-}
-=======
     os.path.join(BASE_DIR,  'templates'),
 )
->>>>>>> origin/master:project_controlefrota/project_controlefrota/settings.py
