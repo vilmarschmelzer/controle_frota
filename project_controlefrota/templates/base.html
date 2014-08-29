@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Orçamento</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Bootstrap -->
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css" />
+
+        <script src="{{ STATIC_URL }}js/jquery.js"></script>
+        <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        <script src="{{ STATIC_URL }}js/base.js"></script>
+    </head>
+    <body>
+        <header class="row">
+            <div class="row">
+                Cabeçalho
+            </div>
+            <div class="navbar navbar-default">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">Orçamento {{ current_site }}</a>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        {% block menu %}
+                        {% endblock %}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        {% block menuuser %}
+                        {% endblock %}
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <section class="container" data-spy="scroll">
+            {% block content %}
+            {% endblock %}
+        </section>
+        <footer class="row">
+            <div class="navbar-header">
+                Desenvolvido por Vilmar Schmelzer
+            </div>
+        </footer>
+    </body>
+</html>
