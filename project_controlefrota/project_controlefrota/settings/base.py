@@ -53,25 +53,6 @@ ROOT_URLCONF = 'project_controlefrota.urls'
 WSGI_APPLICATION = 'project_controlefrota.wsgi.application'
 
 
-<<<<<<< HEAD:project_controlefrota/project_controlefrota/settings/base.py
-
-=======
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'controlefrota',                      # Or path to database file if using sqlite3.
-        'USER': 'postgres',                      # Not used with sqlite3.
-        'PASSWORD': 'postgres',                  # Not used with sqlite3.
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
-    }
-}
->>>>>>> origin/master:project_controlefrota/project_controlefrota/settings.py
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -99,7 +80,6 @@ STATICFILES_DIRS = (
 )
 
 TEMPLATE_DIRS = (
-<<<<<<< HEAD:project_controlefrota/project_controlefrota/settings/base.py
     os.path.join(os.path.dirname(__file__), '../../templates')
 )
 
@@ -132,7 +112,3 @@ LOGGING = {
         },
     }
 }
-=======
-    os.path.join(BASE_DIR,  'templates'),
-)
->>>>>>> origin/master:project_controlefrota/project_controlefrota/settings.py
