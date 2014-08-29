@@ -1,0 +1,12 @@
+.body{
+	background-color: #FFF;
+}
+.row{
+	border: 1px solid black;
+}
+.col-md{
+	border: 1px solid black;
+}
+.conteudo{
+	height: 190%;
+}
