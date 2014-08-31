@@ -1,30 +1,50 @@
 {% extends "base.html" %}
+<!--
+    <form action="." method="POST">
+        {% csrf_token %}
+        Login: {{ form.username }} <br>
+        Senha: {{ form.password }} <br>
+        {% if form.errors %}
+            <label>Ops! Algo de errado, tente novamente</label>
+        {% endif %}
+            <input type="submit" value="Entrar">
+        </div>  
+    </form>
 
-{% block menu %}
-{% endblock %}
-
-{% block menuuser %}
-{% endblock %}
-
+-->
 {% block content %}
-	<form method="post" class="form-horizontal" action="{% url 'django.contrib.auth.views.login' %}">
-		{% csrf_token %}
-		{% if form.errors %}
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="nome">Usuário e senha inválidos.</label>
-            </div>
-		{% endif %}
-		{% include "field.html" with field=form.username label='Usuário' tm_label=2 tm_field=3 %}
-		{% include "field.html" with field=form.password label='Senha' tm_label=2 tm_field=3 %}
-		<div class="form-group">
-			<div class="col-md-3 col-sm-4 col-md-offset-2 col-xs-offset-4">
-				<input type="submit" class="btn btn-default pull-right" value="login" />
-			</div>
-		</div>
-		{% if url_next %}
-			<input type="hidden" name="next" value="{% url url_next %}" />
-		{% else %}
-			<input type="hidden" name="next" value="{% url 'app_orcamento.views.controle.index' %}" />
-		{% endif %}
-	</form>
+    <nav class="row">
+		<section class="col-md-4">	
+		</section>	
+			<section class="col-md-4">	
+					<form method="post" action="{% url 'django.contrib.auth.views.login' %}" class="form-horizontal">
+						{% csrf_token %}
+						  <div class="form-group">
+							<label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+							<div class="col-sm-10">
+                                <input id="id_username" maxlength="254" class="form-control" name="username" type="text"/>
+							</div>
+						  </div>
+						  <div class="form-group">
+							<label for="inputPassword3" class="col-sm-2 control-label">Senha</label>
+							<div class="col-sm-10">
+                                <input id="id_password" class="form-control" type="password" name="password"/>
+											{% if form.errors %}
+										<label>Ops! Algo de errado, tente novamente</label>
+										{% endif %}
+							</div>
+						  </div>
+
+						  <div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+							  <input type="submit" class="btn btn-default" value="Enviar"/>
+							</div>
+						  </div>
+                            <input type="hidden" name="next" value="{% url 'app_frota.views.controle.index' %}" />
+						</form>
+			</section>
+		<section class="col-md-4">
+		</section>
+			
+    </nav>  
 {% endblock %}

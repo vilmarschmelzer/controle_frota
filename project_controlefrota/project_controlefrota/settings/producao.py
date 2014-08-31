@@ -1,5 +1,11 @@
 from .base import *
 
+#Grupo de permissoes
+
+PERM_GRUPO_ADM = 1
+PERM_GRUPO_SERVIDOR = 2
+
+
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 

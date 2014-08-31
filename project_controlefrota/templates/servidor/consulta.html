@@ -1,5 +1,66 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block menuuser %}
+    {% include "login/login_logout.html" %}
+{% endblock %}
+
+
 
 {% block content %}
+	<ol class="breadcrumb">
+		<li><a href="/">Home</a></li>
+		<li class="active"><strong>Consulta de servidores</strong></li>
+	</ol>
+
+	<form id="formProcurar" method="post" class="form-inline" action="/consultar-servidores/">{% csrf_token %}
+		<div class="row">
+			<div class="col-md-4 col-sm-6 col-xs-12">
+				<div class="input-group">
+					{{ form.valor | add_class:"form-control" }}
+					<span class="input-group-btn">
+						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+					</span>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<div class="list-group">
+		{% for servidor in servidores %}
+			<div class="list-group-item">
+				<h4 class="list-group-item-heading">{{ servidor.first_name }} - {{ servidor.username }}
+                    <a href="/editar-servidor/{{ servidor.id }}/">
+						<span class="glyphicon glyphicon-edit pull-right" style="margin-left:10px;"></span>
+					</a>
+					{% if servidor.is_active %}
+						<span class="glyphicon glyphicon-ok pull-right" style="margin-right:10px;"></span>
+					{% endif %}
+				</h4>
+			</div>
+		{% endfor %}
+	</div>
+
+    <ul class="pager">
+   		<li class="previous">
+	    {% if servidores.has_previous %}
+	    	{% if form.valor.value %}
+	       		<a href="?page={{ servidores.previous_page_number }}&valor={{form.valor.value}}"> Anterior </a>
+	       	{% else %}
+	       		<a href="?page={{ servidores.previous_page_number }}"> Anterior </a>
+	       	{% endif %}
+	    {% endif %}
+	    </li>
+
+	    <li class="next">
+	    {% if servidores.has_next %}
+	    	{% if form.valor.value %}
+	       		<a href="?page={{ servidores.next_page_number  }}&valor={{form.valor.value}}"> Próxima </a>
+	       	{% else %}
+	       		<a href="?page={{ servidores.next_page_number  }}"> Próxima </a>
+	       {% endif %}
+	    {% endif %}
+	    </li>
+	</ul>
 
 {% endblock %}

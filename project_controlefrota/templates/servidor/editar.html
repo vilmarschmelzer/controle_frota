@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block menuuser %}
+    {% include "login/login_logout.html" %}
+{% endblock %}
+
+{% block content %}
+    <ol class="breadcrumb">
+		<li><a href="/">Home</a></li>
+        <li><a href="/consultar-servidores/">Consulta servidores</a></li>
+		<li class="active"><strong>Permissões do usuário</strong></li>
+	</ol>
+    {% if msg_erro %}
+	    <div class="alert alert-danger">
+		    {{ msg_erro }}
+	    </div>
+    {% endif %}
+    {{ servidor.first_name }} {{ servidor.last_name }}
+    <form method="post" class="form-horizontal" action="/editar-servidor/{{ servidor.id }}/">
+        {% csrf_token %}
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" {{ servidor.checked }} name="ativo" value="{{ servidor.is_active }}" />Ativo
+            </label>
+        </div>
+        <label>Grupos:</label>
+		{% for grupo in grupos %}
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" {{ grupo.checked }} name="grupo" value="{{ grupo.id }}" />{{ grupo.name }}
+				</label>
+			</div>
+		{% endfor %}
+        <div class="row">
+            <div class="col-md-5">
+                <button type="submit" class="btn btn-default pull-right">Salvar</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

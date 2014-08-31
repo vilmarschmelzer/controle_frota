@@ -1,1 +1,1 @@
-from servidor import FormCadastraServidor
+from servidor import FormCadastraServidor, FormSalvarPerfil

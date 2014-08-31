@@ -1,0 +1,70 @@
+{% extends "index.html" %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+    <ol class="breadcrumb">
+		<li><a href="/">Home</a></li>
+		<li class="active"><strong>Perfil</strong></li>
+	</ol>
+    {% if msg_erro %}
+	    <div class="alert alert-danger">
+		    {{ msg_erro }}
+	    </div>
+    {% endif %}
+    <form method="post" class="form-horizontal" action="/perfil/">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="nome" class="col-lg-3 control-label">
+                Nome
+            </label>
+            <div class="col-lg-7">
+                {{form.nome.errors}}
+                {{form.nome}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email" class="col-lg-3 control-label">
+                E-mail
+            </label>
+            <div class="col-lg-7">
+                {{form.email.errors}}
+                {{form.email}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="senha" class="col-lg-3 control-label">
+                Senha
+            </label>
+            <div class="col-lg-7">
+                {{form.senha.errors}}
+                {{form.senha}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="nova_senha" class="col-lg-3 control-label">
+                Nova senha
+            </label>
+            <div class="col-lg-7">
+                {{form.nova_senha.errors}}
+                {{form.nova_senha}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="confirmar_senha" class="col-lg-3 control-label">
+                Confirmar senha
+            </label>
+            <div class="col-lg-7">
+                {{form.confirmar_senha.errors}}
+                {{form.confirmar_senha}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <button type="submit" class="btn btn-default pull-right">Salvar</button>
+            </div>
+        </div>
+	</form>
+
+{% endblock %}

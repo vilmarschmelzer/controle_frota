@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block menuuser %}
+    {% include "login/login_logout.html" %}
+{% endblock %}
+
+{% block content %}
+	
+	<legend> Cadastre Servidor </legend>
+    {% if msg_erro %}
+	    <div class="alert alert-danger">
+		    {{ msg_erro }}
+	    </div>
+    {% endif %}
+    <form class="form-horizontal" action="/adiciona-servidor/" method="post"
+        role="form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="nome" class="col-lg-3 control-label">
+                Nome
+            </label>
+            <div class="col-lg-7">
+                {{form.nome.errors}}
+                {{form.nome}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email" class="col-lg-3 control-label">
+                E-mail
+            </label>
+            <div class="col-lg-7">
+                {{form.email.errors}}
+                {{form.email}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="senha" class="col-lg-3 control-label">
+                Senha
+            </label>
+            <div class="col-lg-7">
+                {{form.senha.errors}}
+                {{form.senha}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="cpf" class="col-lg-3 control-label">
+                CPF
+            </label>
+            <div class="col-lg-7">
+                {{form.cpf.errors}}
+                {{form.cpf}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="cpf" class="col-lg-3 control-label">
+                Permissão
+            </label>
+            <div class="col-lg-7">
+                {{form.grupos.errors}}
+                {{form.grupos}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-lg-10">
+                <button type="submit" class="btn btn-info pull-right">
+                    Enviar
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

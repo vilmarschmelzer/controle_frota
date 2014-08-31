@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
-<html>
-    <head>
-    <title>Orçamento</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Bootstrap -->
-        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap.css" />
-        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css" />
 
-        <script src="{{ STATIC_URL }}js/jquery.js"></script>
-        <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-        <script src="{{ STATIC_URL }}js/base.js"></script>
-    </head>
-    <body>
-        <header class="row">
-            <div class="row">
-                Cabeçalho
-            </div>
-            <div class="navbar navbar-default">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css" />
+    
+  </head>
+  <body class="body">
+    <header class="row" name="Logo">
+        <section class="col-md-3"><h1>Logo IFC</h1></section>
+        <section class="col-md-6"><h1>Banner IFC</h1></section>
+        <section class="col-md-3"><h1>Acessibilidade</h1></section>
+    </header>
+   <div class="navbar navbar-default">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
                       <span class="sr-only">Toggle navigation</span>
@@ -25,7 +25,7 @@
                       <span class="icon-bar"></span>
                       <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">Orçamento {{ current_site }}</a>
+                    <a class="navbar-brand" href="/">Controle de frota</a>
                 </div>
                 <div class="collapse navbar-collapse" id="navbar-collapse-1">
                     <ul class="nav navbar-nav">
@@ -38,51 +38,15 @@
                     </ul>
                 </div>
             </div>
-        </header>
-
-        <section class="container" data-spy="scroll">
-            {% block content %}
-            {% endblock %}
-        </section>
-        <footer class="row">
-            <div class="navbar-header">
-                Desenvolvido por Vilmar Schmelzer
-            </div>
-        </footer>
-    </body>
-=======
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
-
-    <!-- Bootstrap -->
-    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
-    <script type="text/javascript" href="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-    
-  </head>
-  <body class="body">
-    <header class="row" name="Logo">
-        <section class="col-md-3"><h1>Logo IFC</h1></section>
-        <section class="col-md-6"><h1>Banner IFC</h1></section>
-        <section class="col-md-3"><h1>Acessibilidade</h1></section>
-    </header>
-		{{% block content %}}
-		{{% endblock %}}
+		{% block content %}
+		{% endblock %}
     <footer>
 			<div class="row">
 				<div class="col-md-12"><h5>Rodapé!</h5></div>
 			</div>
-	<footer>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.js" ></script>
-   <script type="text/javascript" src="{{ STATIC_URL }}tests/vendor/jquery.js" ></script>
-   <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js" ></script>      
+	</footer>
+  <script src="{{ STATIC_URL }}js/jquery.js"></script>
+        <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        <script src="{{ STATIC_URL }}js/base.js"></script>
   </body>
->>>>>>> origin/master
 </html>
