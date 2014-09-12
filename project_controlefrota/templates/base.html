@@ -32,7 +32,9 @@
         <div class="collapse navbar-collapse" id="navbar-collapse-1">
             <ul class="nav navbar-nav">
                 {% block menu %}
-                {% endblock %}
+
+        {{ context_menu | safe }}
+{% endblock %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% block menuuser %}
@@ -40,21 +42,11 @@
             </ul>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-2">
-            <ul>
-                <li><a href="/adicionar-servidor/">Adicionar servidor</a></li>
-                <li><a href="/consultar-servidores/">Consultar servidores</a></li>
-                <li><a href="#">Adicionar servidor</a></li>
-                <li><a href="#">Adicionar servidor</a></li>
+    <div class="container">
 
-            </ul>
-
-        </div>
-        <div class="col-md-6">
             {% block content %}
             {% endblock %}
-        </div>
+
     </div>
     <footer>
 			<div class="row" style="background-color: #095b17;">

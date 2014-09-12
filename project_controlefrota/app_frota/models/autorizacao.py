@@ -12,5 +12,6 @@ class Autorizacao(models.Model):
     aprovado = models.BooleanField()
     servidor = models.ForeignKey(Servidor)
 
+
     class Meta:
         app_label = 'app_frota'

@@ -45,7 +45,7 @@ def adicionar(request):
                 User(servidor.id).groups.add(gp)
 
             #Vilmar
-            return redirect("/lista_servidores/")
+            return redirect("/consultar-servidores/")
 
     else:
         form = FormCadastraServidor()

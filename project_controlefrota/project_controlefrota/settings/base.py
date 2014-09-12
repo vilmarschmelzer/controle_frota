@@ -112,3 +112,11 @@ LOGGING = {
         },
     }
 }
+
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "context_processors.menu.get_menu",
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.static",
+)
