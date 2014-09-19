@@ -11,6 +11,9 @@ def get_menu(request):
         if settings.PERM_GRUPO_ADM in grupos_id:
             html += render_to_string('menu/menu_adm.html')
 
+        if settings.PERM_GRUPO_CHEFIA in grupos_id:
+            html += render_to_string('menu/menu_chefia.html')
+
         if settings.PERM_GRUPO_SERVIDOR in grupos_id:
             html += render_to_string('menu/menu_servidor.html')
 

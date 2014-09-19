@@ -20,5 +20,8 @@ urlpatterns = patterns('',
     url(r'^perfil/$', 'app_frota.views.servidor.salvar_perfil', name='perfil'),
     url(r'^$', 'app_frota.views.controle.index', name='index'),
 
+    url(r'^visualizar-autorizacao/(?P<id>\d+)/$', 'app_frota.views.autorizacao.visualizar', name='visualizar-autorizacao'),
+    url(r'^consultar-autorizacoes/$', 'app_frota.views.autorizacao.consultar', name='consultar-autorizacoes'),
+
     url(r'^cargainicial/$', 'app_frota.views.carga_inicial.carga', name='carga'),
 )

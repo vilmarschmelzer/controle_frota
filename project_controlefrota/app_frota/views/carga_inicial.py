@@ -9,7 +9,7 @@ from django.conf import settings
 @transaction.commit_on_success
 def carga(request):
 
-    grupos_nome = ['Administrador', 'Servidor']
+    grupos_nome = ['Administrador', 'Servidor', 'Chefia']
 
     for gp_nome in grupos_nome:
         gp = Group.objects.filter(name=gp_nome)

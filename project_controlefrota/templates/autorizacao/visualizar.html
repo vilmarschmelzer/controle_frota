@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block menuuser %}
+    {% include "login/login_logout.html" %}
+{% endblock %}
+
+{% block content %}
+    <ol class="breadcrumb">
+		<li><a href="/">Home</a></li>
+        <li><a href="/consultar-autorizacoes/">Consulta de autorizações</a></li>
+		<li class="active"><strong>Autorização</strong></li>
+	</ol>
+    {% if msg_erro %}
+	    <div class="alert alert-danger">
+		    {{ msg_erro }}
+	    </div>
+    {% endif %}
+    CNH : {{autorizacao.cnh}}<br>
+
+    Nome servidor : {{ autorizacao.servidor.first_name }} {{ autorizacao.servidor.last_name }}
+
+    <form method="post" class="form-horizontal" action="/visualizar-autorizacao/{{ autorizacao.id }}/">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Autorização
+            </label>
+            <div class="col-lg-7">
+                <div class="radio">
+                {% if autorizacao.aprovado == None %}
+                    <input type="radio" name="aprovado" value="True"/>Aprovado <br>
+                    <input type="radio" name="aprovado" value="False"/>Recusado
+                {% elif autorizacao.aprovado %}
+                    <input type="radio" checked name="aprovado" value="True"/>Aprovado <br>
+                    <input type="radio" name="aprovado" value="False"/>Recusado
+                {% else %}
+                    <input type="radio" name="aprovado" value="True"/>Aprovado <br>
+                    <input type="radio" checked name="aprovado" value="False"/>Recusado
+                {% endif %}
+            </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <button type="submit" class="btn btn-default pull-right">Salvar</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
