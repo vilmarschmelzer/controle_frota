@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^static/(.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
+    url(r'^estado/cidades/$', 'app_frota.views.cidade.cidades', name='cidades'),
     url(r'^adicionar-servidor/$', 'app_frota.views.servidor.adicionar', name='adicionar-servidor'),
     url(r'^editar-servidor/(?P<user_id>\d+)/$', 'app_frota.views.servidor.editar', name='editar-servidor'),
     url(r'^consultar-servidores/$', 'app_frota.views.servidor.consultar', name='consultar-servidores'),
@@ -22,6 +23,8 @@ urlpatterns = patterns('',
 
     url(r'^visualizar-autorizacao/(?P<id>\d+)/$', 'app_frota.views.autorizacao.visualizar', name='visualizar-autorizacao'),
     url(r'^consultar-autorizacoes/$', 'app_frota.views.autorizacao.consultar', name='consultar-autorizacoes'),
+
+    url(r'^solicitar-emprestimo/$', 'app_frota.views.emprestimo.solicitar', name='solicitar-emprestimo'),
 
     url(r'^cargainicial/$', 'app_frota.views.carga_inicial.carga', name='carga'),
 )

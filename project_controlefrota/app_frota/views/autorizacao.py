@@ -6,9 +6,11 @@ from django.conf import settings
 from app_frota.forms.pesquisa import FormPesquisa
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.db import transaction
 
 
 @group_required(settings.PERM_GRUPO_CHEFIA)
+@transaction.commit_on_success
 def visualizar(request, id):
 
     autorizacao = Autorizacao.objects.get(pk=id)
