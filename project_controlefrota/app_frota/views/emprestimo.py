@@ -1,6 +1,6 @@
 #coding:utf-8
-from django.shortcuts import render, redirect
-from app_frota.models import Emprestimo, Rota
+from django.shortcuts import render, redirect, HttpResponse
+from app_frota.models import Emprestimo, Rota, Autorizacao, Veiculo
 from decorators.permissoes import group_required
 from django.conf import settings
 from app_frota.forms.pesquisa import FormPesquisa
@@ -9,29 +9,24 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from django.db import transaction
 from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
+from django.core import serializers
+from django.utils import simplejson
 
 
 @group_required(settings.PERM_GRUPO_SERVIDOR)
 @transaction.commit_on_success
 def solicitar(request):
 
-    print request.POST
+    ''' select a.id as id from app_frota_veiculo a inner join app_frota_emprestimo b on (a.id=b.veiculo_id)
+    where not b.dt_saida between "2016-02-21 07:50:00" and "2016-02-21 08:49:00" '''
 
     if request.method == 'POST':
-        print request.POST
+
         form = FormSolicitar(request.POST['estado_origem'], request.POST['estado_destino'], request.POST)
 
         if form.is_valid():
-
-            dt_saida = datetime.strptime('%i/%i/%i %s:00' % (int(request.POST['dt_saida_day']),
-                                                             int(request.POST['dt_saida_month']),
-                                                             int(request.POST['dt_saida_year']),
-                                                             request.POST['hora_saida']), '%d/%m/%Y %H:%M:00')
-
-            dt_devolucao = datetime.strptime('%i/%i/%i %s:00' % (int(request.POST['dt_devolucao_day']),
-                                                             int(request.POST['dt_devolucao_month']),
-                                                             int(request.POST['dt_devolucao_year']),
-                                                             request.POST['hora_devolucao']), '%d/%m/%Y %H:%M:00')
+            form.get_data_saida()
 
             rota = Rota()
             rota.cidade_origem_id = request.POST['cidade_origem']
@@ -42,20 +37,22 @@ def solicitar(request):
 
             emprestimo = Emprestimo()
             emprestimo.rota = rota
-            emprestimo.dt_saida = dt_saida
-            emprestimo.dt_devolucao = dt_devolucao
+            emprestimo.dt_saida = form.get_data_saida()
+            emprestimo.dt_devolucao = form.get_data_devolucao()
             emprestimo.observacao = request.POST['observacao']
+
+            if 'veiculo' in request.POST:
+                emprestimo.veiculo_id = request.POST['veiculo']
 
             if 'solicitar_condutor' not in request.POST:
                 emprestimo.condutor_id = request.user.id
             emprestimo.servidor_id = request.user.id
-            #veiculo = models.ForeignKey(Veiculo, null=True)
 
             emprestimo.save()
 
             return redirect('/')
     else:
-        form = FormSolicitar(None,None)
+        form = FormSolicitar(None, None)
 
     return render(request, 'emprestimo/solicita.html', {'form': form })
 
@@ -97,3 +94,36 @@ def consultar(request):
         autorizacoes_page = paginator.page(paginator.num_pages)
 
     return render(request, 'autorizacao/consulta.html', {'form': form, 'autorizacoes': autorizacoes_page})
+
+
+@csrf_exempt
+def veiculos_disponiveis(request):
+
+    form = FormSolicitar(None,None,request.POST)
+    msg = ''
+
+    form.is_valid()
+    if 'dt_saida' not in form.errors and 'dt_devolucao' not in form.errors and 'hora_devolucao' not in form.errors:
+
+        veiculos = Veiculo.objects.raw('select id from app_frota_veiculo where id not in (select a.id as id from app_frota_veiculo a inner join app_frota_emprestimo b on (a.id=b.veiculo_id) '
+                            +'where not b.dt_saida between \'%s\' and \'%s\')' % (form.get_data_saida(),form.get_data_devolucao()))
+
+        json = serializers.serialize('json', veiculos)
+
+        #json = simplejson.dumps({'success': True, 'veiculos': data_json}, ensure_ascii=False)
+
+    else:
+
+        msg = ''
+        if 'dt_saida' in form.errors:
+            msg += u'Data saída : '+form.errors['dt_saida'].as_text()+'<br>'
+        if 'dt_devolucao' in form.errors:
+            msg += u'Data devolucao: '+form.errors['dt_devolucao'].as_text()+'<br>'
+        if 'hora_devolucao' in form.errors:
+            msg += u'Hora devolucão: '+form.errors['hora_devolucao'].as_text()+'<br>'
+        json = simplejson.dumps({'success': False, 'msg': msg}, ensure_ascii=False)
+
+    print form.get_data_saida()
+    print form.get_data_devolucao()
+
+    return HttpResponse(json, mimetype='application/json')
