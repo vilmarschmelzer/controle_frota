@@ -1,7 +1,5 @@
 from django.db import models
 from servidor import Servidor
-from chefia import Chefia
-from django.contrib.auth.models import User
 
 
 class Autorizacao(models.Model):
@@ -9,9 +7,8 @@ class Autorizacao(models.Model):
     dt_inicio = models.DateField()
     dt_fim = models.DateField()
     observacao = models.TextField()
-    aprovado = models.BooleanField()
+    aprovado = models.NullBooleanField()
     servidor = models.ForeignKey(Servidor)
-
 
     class Meta:
         app_label = 'app_frota'

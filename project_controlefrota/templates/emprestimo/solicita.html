@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block menuuser %}
+    {% include "login/login_logout.html" %}
+{% endblock %}
+
+{% block content %}
+
+	<legend>Solicitação de empréstimo </legend>
+    {% if msg_erro %}
+	    <div class="alert alert-danger">
+		    {{ msg_erro }}
+	    </div>
+    {% endif %}
+    <form class="form-horizontal" action="/solicitar-emprestimo/" method="post"
+        role="form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Data saída
+            </label>
+            <div class="col-lg-7">
+                {{form.dt_saida.errors}}
+                {{form.dt_saida}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Hora saída
+            </label>
+            <div class="col-lg-7">
+                {{form.hora_saida.errors}}
+                {{form.hora_saida}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Data devolução
+            </label>
+            <div class="col-lg-7">
+                {{form.dt_devolucao.errors}}
+                {{form.dt_devolucao}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Hora devolução
+            </label>
+            <div class="col-lg-7">
+                {{form.hora_devolucao.errors}}
+                {{form.hora_devolucao}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Observação
+            </label>
+            <div class="col-lg-7">
+                {{form.observacao.errors}}
+                {{form.observacao}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Solicitar condutor
+            </label>
+            <div class="col-lg-7">
+                <div class="pull-left">
+                    {{form.solicitar_condutor.errors}}
+                    {{form.solicitar_condutor}}
+                </div>
+            </div>
+        </div>
+        <legend>Origem</legend>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Estado
+            </label>
+            <div class="col-lg-7">
+                {{form.estado_origem.errors}}
+                {{form.estado_origem}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Cidade
+            </label>
+            <div class="col-lg-7">
+                {{form.cidade_origem.errors}}
+                {{form.cidade_origem}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Endereço
+            </label>
+            <div class="col-lg-7">
+                {{form.endereco_origem.errors}}
+                {{form.endereco_origem}}
+            </div>
+        </div>
+
+        <legend>Destino</legend>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Estado
+            </label>
+            <div class="col-lg-7">
+                {{form.estado_destino.errors}}
+                {{form.estado_destino}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Cidade
+            </label>
+            <div class="col-lg-7">
+                {{form.cidade_destino.errors}}
+                {{form.cidade_destino}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Endereço
+            </label>
+            <div class="col-lg-7">
+                {{form.endereco_destino.errors}}
+                {{form.endereco_destino}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Veiculo
+            </label>
+            <div class="col-lg-7">
+
+                <label id="alerta"></label>
+                <br>
+                <button type="button"  class="btn btn-default" onclick="buscar_veiculos();">Buscar veículos</button>
+                <br>
+                <div id="veiculos">
+
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <div class="col-lg-10">
+                <button type="submit" class="btn btn-info pull-right">
+                    Enviar
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

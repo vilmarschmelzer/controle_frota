@@ -2,4 +2,6 @@ from servidor import Servidor
 
 
 class Chefia(Servidor):
-    pass
+
+    class Meta:
+        app_label = 'app_frota'
