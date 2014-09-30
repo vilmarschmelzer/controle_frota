@@ -28,4 +28,6 @@ urlpatterns = patterns('',
     url(r'^emprestimo/veiculos/$', 'app_frota.views.emprestimo.veiculos_disponiveis', name='emprestimo-veiculos'),
 
     url(r'^cargainicial/$', 'app_frota.views.carga_inicial.carga', name='carga'),
+
+    url(r'^cadastrar-marca/$', 'app_frota.views.marca.cadastrar_marca', name='cadastrar_marca'),
 )
