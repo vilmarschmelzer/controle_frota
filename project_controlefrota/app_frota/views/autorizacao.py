@@ -4,9 +4,11 @@ from app_frota.models import Autorizacao
 from decorators.permissoes import group_required
 from django.conf import settings
 from app_frota.forms.pesquisa import FormPesquisa
+from app_frota.forms.autorizacao import FormAutorizacao
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.db import transaction
+from datetime import datetime, timedelta
 
 
 @group_required(settings.PERM_GRUPO_CHEFIA)
@@ -66,3 +68,23 @@ def consultar(request):
         autorizacoes_page = paginator.page(paginator.num_pages)
 
     return render(request, 'autorizacao/consulta.html', {'form': form, 'autorizacoes': autorizacoes_page})
+@group_required(settings.PERM_GRUPO_SERVIDOR)
+def solicitar(request):
+
+    if request.method == 'POST':
+        form = FormAutorizacao(request.POST)
+        print form.errors
+
+        if form.is_valid():
+            autorizacao = Autorizacao()
+            autorizacao.cnh = request.POST["cnh"]
+            autorizacao.observacao = request.POST["observacao"]
+            autorizacao.servidor_id = request.user.id
+            autorizacao.save()
+
+            return redirect("/#/")
+
+    else:
+        form = FormAutorizacao()
+
+    return render(request, 'autorizacao/autorizacao.html', {"form":form })
