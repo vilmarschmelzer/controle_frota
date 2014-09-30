@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^consultar-servidores/$', 'app_frota.views.servidor.consultar', name='consultar-servidores'),
 
     url(r'^adicionar-veiculo/$', 'app_frota.views.veiculo.adicionar', name='adicionar'),
+    url(r'^editar-veiculo/(?P<veiculo_id>\d+)/$', 'app_frota.views.veiculo.editar', name='editar'),
     url(r'^consultar-veiculos/$', 'app_frota.views.veiculo.consultar', name='consultar-veiculos'),
 
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login/login.html'}),

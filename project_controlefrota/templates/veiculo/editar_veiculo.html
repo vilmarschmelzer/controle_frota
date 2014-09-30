@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block menuuser %}
+    {% include "login/login_logout.html" %}
+{% endblock %}
+
+{% block content %}
+    <form method="post" class="form-horizontal" action="/editar-veiculo/{{ id }}/">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="nome" class="col-lg-3 control-label">
+                Nome
+            </label>
+            <div class="col-lg-7">
+                {{form.nome.errors}}
+                {{form.nome}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="marca" class="col-lg-3 control-label">
+                Marca
+            </label>
+            <div class="col-lg-7">
+                {{form.marca.errors}}
+                {{form.marca}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="chassis" class="col-lg-3 control-label">
+                Chassis
+            </label>
+            <div class="col-lg-7">
+                {{form.chassis.errors}}
+                {{form.chassis}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="modelo" class="col-lg-3 control-label">
+                Modelo
+            </label>
+            <div class="col-lg-7">
+                {{form.modelo.errors}}
+                {{form.modelo}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="placa" class="col-lg-3 control-label">
+                Placa
+            </label>
+            <div class="col-lg-7">
+                {{form.placa.errors}}
+                {{form.placa}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <button type="submit" class="btn btn-default pull-right">Salvar</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

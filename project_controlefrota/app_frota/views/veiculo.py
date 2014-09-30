@@ -41,7 +41,7 @@ def adicionar(request):
 
             veiculo.save()
 
-            return redirect("veiculo/listar_veiculos/")
+            return redirect("/consultar-veiculos/")
 
     else:
         form = FormVeiculo()
@@ -50,48 +50,47 @@ def adicionar(request):
 
 
 @group_required(settings.PERM_GRUPO_ADM)
-def editar(request, user_id):
+def editar(request, veiculo_id):
 
-    user = User.objects.get(pk=user_id)
-    grupos_user = user.groups.values_list('id').all()
-    msg_erro = None
+    request.session['id_veiculo'] = veiculo_id
+
+    veiculo = Veiculo.objects.get(pk=veiculo_id)
+
     if request.method == 'POST':
-        grupos_selecionado = request.POST.getlist('grupo')
 
-        if str(settings.PERM_GRUPO_ADM) in request.POST.getlist('grupo') and not request.user.is_superuser:
-            msg_erro = 'Usuário logado não é "Super usuário", não será possui adicionar o "Administrador" ao usuário.'
-        else:
-            for grupo in grupos_selecionado:
-                if (int(grupo),) not in grupos_user:
-                    user.groups.add(grupo)
+        form = FormVeiculo(request.POST)
 
-            for grupo in user.groups.all():
-                print 'group : ',grupo
-                if str(grupo.id) not in grupos_selecionado:
-                    user.groups.remove(grupo)
+        if form.is_valid():
 
-            if 'ativo' in request.POST:
-                user.is_active = True
-            else:
-                user.is_active = False
+            if str(settings.PERM_GRUPO_ADM) in request.POST.getlist('grupos') \
+                    and not request.user.is_superuser:
+                return render(request, 'veiculo/adiciona_veiculo.html',
+                              {	'form': form, 'msg_erro': 'Usuário logado não é "Super usuário", '
+                                                             'não será possui cadastrar servidor com permissão "Administrador"'})
 
-            user.save()
-            return redirect('/consultar-servidores/')
+            veiculo.nome = request.POST["nome"]
+            veiculo.marca_id = request.POST["marca"]
+            veiculo.modelo = request.POST["modelo"]
+            veiculo.chassis = request.POST["chassis"]
+            veiculo.placa = request.POST["placa"]
 
-    grupos = Group.objects.all()
+            veiculo.save()
 
-    for gp in grupos:
-        if (gp.id,) in grupos_user:
-            gp.checked = 'checked'
-        else:
-            gp.checked = ''
+            return redirect("/consultar-veiculos/")
 
-    if user.is_active:
-        user.checked = 'checked'
     else:
-        user.checked = ''
 
-    return render(request, 'servidor/editar.html', {'servidor': user, 'grupos': grupos, 'msg_erro': msg_erro})
+        dados_veiculo = {
+            'nome':veiculo.nome,
+            'marca':veiculo.marca_id,
+            'modelo':veiculo.modelo,
+            'chassis':veiculo.chassis,
+            'placa':veiculo.placa
+        }
+
+        form = FormVeiculo(initial=dados_veiculo)
+
+    return render(request, 'veiculo/editar_veiculo.html', {"form":form, "id":veiculo_id})
 
 
 @group_required(settings.PERM_GRUPO_ADM)
@@ -128,28 +127,3 @@ def consultar(request):
         veiculos_page = paginator.page(paginator.num_pages)
 
     return render(request, 'veiculo/consulta.html', {'form': form, 'veiculos': veiculos_page})
-
-
-@login_required
-def salvar_perfil(request):
-
-    if request.method == 'POST':
-        form = FormSalvarPerfil(request.user.id, request.POST)
-
-        if form.is_valid():
-            user = User.objects.get(pk=request.user.id)
-            if request.POST['nova_senha'] != '':
-                user.set_password(request.POST['confirmar_senha'])
-
-            user.first_name = request.POST['nome']
-            user.email = request.POST['email']
-
-            user.save()
-
-            logout(request)
-            return redirect('/')
-    else:
-        data = {'nome': request.user.first_name, 'email': request.user.email, '': request.user.username}
-        form = FormSalvarPerfil(request.user.id, initial=data)
-
-    return render(request, 'servidor/perfil.html', {	'form': form})
