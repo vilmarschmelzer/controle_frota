@@ -1,1 +1,2 @@
 from servidor import FormCadastraServidor, FormSalvarPerfil
+from veiculo import FormVeiculo

@@ -15,6 +15,9 @@ urlpatterns = patterns('',
     url(r'^editar-servidor/(?P<user_id>\d+)/$', 'app_frota.views.servidor.editar', name='editar-servidor'),
     url(r'^consultar-servidores/$', 'app_frota.views.servidor.consultar', name='consultar-servidores'),
 
+    url(r'^adicionar-veiculo/$', 'app_frota.views.veiculo.adicionar', name='adicionar'),
+    url(r'^consultar-veiculos/$', 'app_frota.views.veiculo.consultar', name='consultar-veiculos'),
+
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login/login.html'}),
     url(r'^logout/$', 'app_frota.views.controle.logout_user', name='logout_user'),
     url(r'^perfil/$', 'app_frota.views.servidor.salvar_perfil', name='perfil'),

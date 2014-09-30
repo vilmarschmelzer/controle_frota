@@ -1,6 +1,6 @@
 #coding:utf-8
 from django.shortcuts import render, redirect
-from app_frota.models import Servidor, Administrador
+from app_frota.models import Servidor, Administrador, Autorizacao
 from app_frota.forms import FormCadastraServidor, FormSalvarPerfil
 from decorators.permissoes import group_required
 from django.conf import settings
@@ -163,3 +163,19 @@ def salvar_perfil(request):
         form = FormSalvarPerfil(request.user.id, initial=data)
 
     return render(request, 'servidor/perfil.html', {	'form': form})
+
+@login_required
+def solicitar_autorizacao():
+
+    if request.method == 'POST':
+        form = FormSolicitarAutorizacao(request.uder.id, request.POST)
+
+        if form.is_valid():
+            autorizacao = Autorizacao.objects.all()
+
+            autorizacao.cnh = request.POST["cnh"]
+            autorizacao.cnh = request.POST["cnh"]
+            autorizacao.cnh = request.POST["cnh"]
+            autorizacao.cnh = request.POST["cnh"]
+            autorizacao.cnh = request.POST["cnh"]
+            autorizacao.cnh = request.POST["cnh"]
