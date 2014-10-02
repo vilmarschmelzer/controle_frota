@@ -8,7 +8,7 @@ from datetime import datetime
 
 class FormSolicitar(forms.Form):
 
-    def __init__(self, estado_origem_id, estado_destino_id, *args, **kwargs):
+    def __init__(self, estado_origem_id, estado_destino_id, solcitar_condutor, *args, **kwargs):
         super(FormSolicitar, self).__init__(*args, **kwargs)
 
         self.fields['dt_saida'] = forms.DateField(
@@ -42,12 +42,24 @@ class FormSolicitar(forms.Form):
                 'class': 'form-control',
                 'id': 'senha'}))
 
-        self.fields['solicitar_condutor'] = forms.BooleanField(required=False,
-            widget=forms.CheckboxInput(attrs={
-                'class': 'form-control',
-                'id': 'solicitar_condutor'
-            })
-        )
+        if solcitar_condutor:
+
+            self.fields['solicitar_condutor'] = forms.BooleanField(required=False,
+                widget=forms.CheckboxInput(attrs={
+                    'class': 'form-control',
+                    'id': 'solicitar_condutor'
+                })
+            )
+
+        else:
+            self.fields['solicitar_condutor'] = forms.BooleanField(required=False,
+                widget=forms.CheckboxInput(attrs={
+                    'class': 'form-control',
+                    'id': 'solicitar_condutor',
+                    'checked': '',
+                    'disabled': ''
+                })
+            )
 
         if estado_origem_id == '':
             estado_origem_id = None

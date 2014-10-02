@@ -1,6 +1,6 @@
 #coding:utf-8
 from django.shortcuts import render, redirect, HttpResponse
-from app_frota.models import Emprestimo, Rota, Autorizacao, Veiculo
+from app_frota.models import Emprestimo, Rota, Autorizacao, Veiculo, Servidor
 from decorators.permissoes import group_required
 from django.conf import settings
 from app_frota.forms.pesquisa import FormPesquisa
@@ -18,12 +18,14 @@ from django.utils import simplejson
 @transaction.commit_on_success
 def solicitar(request):
 
+    solcitar_condutor = Servidor().is_condizir(request.user.id)
+
     ''' select a.id as id from app_frota_veiculo a inner join app_frota_emprestimo b on (a.id=b.veiculo_id)
     where not b.dt_saida between "2016-02-21 07:50:00" and "2016-02-21 08:49:00" '''
 
     if request.method == 'POST':
 
-        form = FormSolicitar(request.POST['estado_origem'], request.POST['estado_destino'], request.POST)
+        form = FormSolicitar(request.POST['estado_origem'], request.POST['estado_destino'], solcitar_condutor, request.POST)
 
         if form.is_valid():
             form.get_data_saida()
@@ -52,9 +54,9 @@ def solicitar(request):
 
             return redirect('/')
     else:
-        form = FormSolicitar(None, None)
+        form = FormSolicitar(None, None, solcitar_condutor)
 
-    return render(request, 'emprestimo/solicita.html', {'form': form })
+    return render(request, 'emprestimo/solicita.html', {'form': form ,'solcitar_condutor': solcitar_condutor})
 
 
 @group_required(settings.PERM_GRUPO_CHEFIA)

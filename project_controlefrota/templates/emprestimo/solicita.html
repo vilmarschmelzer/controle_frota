@@ -69,6 +69,9 @@
                 <div class="pull-left">
                     {{form.solicitar_condutor.errors}}
                     {{form.solicitar_condutor}}
+                    {% if solcitar_condutor == False %}
+                        Usúario não tem premissão para conduzir
+                    {% endif %}
                 </div>
             </div>
         </div>
