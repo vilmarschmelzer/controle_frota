@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block menuuser %}
+    {% include "login/login_logout.html" %}
+{% endblock %}
+
+{% block content %}
+
+	<legend>Solicitação de empréstimo </legend>
+    {% if msg_erro %}
+	    <div class="alert alert-danger">
+		    {{ msg_erro }}
+	    </div>
+    {% endif %}
+    <form class="form-horizontal" action="/visualizar-emprestimo/{{ form.emprestimo.id }}/" method="post"
+        role="form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Solicitado por
+            </label>
+            <div class="col-lg-7">
+                {{form.emprestimo.servidor.first_name}} {{form.emprestimo.servidor.last_name}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Data saída
+            </label>
+            <div class="col-lg-7">
+                {{form.emprestimo.dt_saida}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Data devolução
+            </label>
+            <div class="col-lg-7">
+                {{form.emprestimo.dt_devolucao}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Observação
+            </label>
+            <div class="col-lg-7">
+                {{form.emprestimo.observacao}}
+            </div>
+        </div>
+        {% if not form.emprestimo.condutor or form.emprestimo.condutor_id != form.emprestimo.servidor_id %}
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Selecionar condutor
+            </label>
+            <div class="col-lg-7">
+                {{form.condutor}}
+                {{form.condutor.errors}}
+            </div>
+        </div>
+        {% endif %}
+        <legend>Origem</legend>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Estado
+            </label>
+            <div class="col-lg-7">
+                {{form.emprestimo.rota.cidade_origem.estado.nome}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Cidade
+            </label>
+            <div class="col-lg-7">
+                {{form.emprestimo.rota.cidade_origem}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Endereço
+            </label>
+            <div class="col-lg-7">
+                {{form.emprestimo.rota.endereco_origem}}
+            </div>
+        </div>
+
+        <legend>Destino</legend>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Estado
+            </label>
+            <div class="col-lg-7">
+                {{form.emprestimo.rota.cidade_destino.estado.nome}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Cidade
+            </label>
+            <div class="col-lg-7">
+                {{form.emprestimo.rota.cidade_destino}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Endereço
+            </label>
+            <div class="col-lg-7">
+                {{form.emprestimo.rota.endereco_destino}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Veiculo
+            </label>
+            <div class="col-lg-7">
+
+                {{form.veiculo}}
+                {{form.veiculo.errors}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Aprovado
+            </label>
+            <div class="col-lg-7">
+
+                {{form.aprovado}}
+                {{form.aprovado.errors}}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-10">
+                <button type="submit" class="btn btn-info pull-right">
+                    Enviar
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

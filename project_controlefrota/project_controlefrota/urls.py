@@ -31,6 +31,7 @@ urlpatterns = patterns('',
 
     url(r'^solicitar-emprestimo/$', 'app_frota.views.emprestimo.solicitar', name='solicitar-emprestimo'),
     url(r'^emprestimo/veiculos/$', 'app_frota.views.emprestimo.veiculos_disponiveis', name='emprestimo-veiculos'),
+    url(r'^visualizar-emprestimo/(?P<id>\d+)/$', 'app_frota.views.emprestimo.visualizar', name='visualizar-emprestimo'),
 
     url(r'^cargainicial/$', 'app_frota.views.carga_inicial.carga', name='carga'),
 
