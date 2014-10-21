@@ -1,10 +1,10 @@
 #coding:utf-8
 from django.shortcuts import render, redirect, HttpResponse
-from app_frota.models import Emprestimo, Rota, Autorizacao, Veiculo
+from app_frota.models import Emprestimo, Rota, Autorizacao, Veiculo, Servidor
 from decorators.permissoes import group_required
 from django.conf import settings
 from app_frota.forms.pesquisa import FormPesquisa
-from app_frota.forms.emprestimo import FormSolicitar
+from app_frota.forms.emprestimo import FormSolicitar, FormVisualizar
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.db import transaction
@@ -18,12 +18,14 @@ from django.utils import simplejson
 @transaction.commit_on_success
 def solicitar(request):
 
+    solcitar_condutor = Servidor().is_conduzir(request.user.id)
+
     ''' select a.id as id from app_frota_veiculo a inner join app_frota_emprestimo b on (a.id=b.veiculo_id)
     where not b.dt_saida between "2016-02-21 07:50:00" and "2016-02-21 08:49:00" '''
 
     if request.method == 'POST':
 
-        form = FormSolicitar(request.POST['estado_origem'], request.POST['estado_destino'], request.POST)
+        form = FormSolicitar(request.POST['estado_origem'], request.POST['estado_destino'], solcitar_condutor, request.POST)
 
         if form.is_valid():
             form.get_data_saida()
@@ -52,9 +54,27 @@ def solicitar(request):
 
             return redirect('/')
     else:
-        form = FormSolicitar(None, None)
+        form = FormSolicitar(None, None, solcitar_condutor)
 
-    return render(request, 'emprestimo/solicita.html', {'form': form })
+    return render(request, 'emprestimo/solicita.html', {'form': form, 'solcitar_condutor': solcitar_condutor})
+
+
+@group_required(settings.PERM_GRUPO_ADM)
+@transaction.commit_on_success
+def visualizar(request, id):
+
+    if request.method == 'POST':
+        form = FormVisualizar(id, request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            return redirect('/consultar-emprestimos/')
+
+    else:
+        form = FormVisualizar(id)
+
+    return render(request, 'emprestimo/visualizar.html', {'form': form})
 
 
 @group_required(settings.PERM_GRUPO_CHEFIA)
@@ -137,18 +157,13 @@ def consulta_emp_serv(request):
 @csrf_exempt
 def veiculos_disponiveis(request):
 
-    form = FormSolicitar(None,None,request.POST)
-    msg = ''
+    form = FormSolicitar(None, None, None, request.POST)
 
     form.is_valid()
     if 'dt_saida' not in form.errors and 'dt_devolucao' not in form.errors and 'hora_devolucao' not in form.errors:
 
-        veiculos = Veiculo.objects.raw('select id from app_frota_veiculo where id not in (select a.id as id from app_frota_veiculo a inner join app_frota_emprestimo b on (a.id=b.veiculo_id) '
-                            +'where not b.dt_saida between \'%s\' and \'%s\')' % (form.get_data_saida(),form.get_data_devolucao()))
-
+        veiculos = Veiculo().get_veiculos_disponiveis(form.get_data_saida(),form.get_data_devolucao())
         json = serializers.serialize('json', veiculos)
-
-        #json = simplejson.dumps({'success': True, 'veiculos': data_json}, ensure_ascii=False)
 
     else:
 
@@ -160,8 +175,5 @@ def veiculos_disponiveis(request):
         if 'hora_devolucao' in form.errors:
             msg += u'Hora devolucão: '+form.errors['hora_devolucao'].as_text()+'<br>'
         json = simplejson.dumps({'success': False, 'msg': msg}, ensure_ascii=False)
-
-    print form.get_data_saida()
-    print form.get_data_devolucao()
 
     return HttpResponse(json, mimetype='application/json')

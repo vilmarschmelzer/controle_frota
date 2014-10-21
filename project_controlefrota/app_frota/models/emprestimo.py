@@ -12,6 +12,7 @@ class Emprestimo(models.Model):
     servidor = models.ForeignKey(Servidor, related_name='emprestimo_servidor')
     veiculo = models.ForeignKey(Veiculo, null=True)
     rota = models.ForeignKey(Rota)
+    aprovado = models.NullBooleanField()
 
     class Meta:
         app_label = 'app_frota'

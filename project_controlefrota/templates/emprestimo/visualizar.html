@@ -12,25 +12,24 @@
 		    {{ msg_erro }}
 	    </div>
     {% endif %}
-    <form class="form-horizontal" action="/solicitar-emprestimo/" method="post"
+    <form class="form-horizontal" action="/visualizar-emprestimo/{{ form.emprestimo.id }}/" method="post"
         role="form">
         {% csrf_token %}
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Solicitado por
+            </label>
+            <div class="col-lg-7">
+                {{form.emprestimo.servidor.first_name}} {{form.emprestimo.servidor.last_name}}
+            </div>
+        </div>
         <div class="form-group">
             <label class="col-lg-3 control-label">
                 Data saída
             </label>
             <div class="col-lg-7">
-                {{form.dt_saida.errors}}
-                {{form.dt_saida}}
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-lg-3 control-label">
-                Hora saída
-            </label>
-            <div class="col-lg-7">
-                {{form.hora_saida.errors}}
-                {{form.hora_saida}}
+                {{form.emprestimo.dt_saida}}
             </div>
         </div>
         <div class="form-group">
@@ -38,17 +37,7 @@
                 Data devolução
             </label>
             <div class="col-lg-7">
-                {{form.dt_devolucao.errors}}
-                {{form.dt_devolucao}}
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-lg-3 control-label">
-                Hora devolução
-            </label>
-            <div class="col-lg-7">
-                {{form.hora_devolucao.errors}}
-                {{form.hora_devolucao}}
+                {{form.emprestimo.dt_devolucao}}
             </div>
         </div>
 
@@ -57,24 +46,20 @@
                 Observação
             </label>
             <div class="col-lg-7">
-                {{form.observacao.errors}}
-                {{form.observacao}}
+                {{form.emprestimo.observacao}}
             </div>
         </div>
+        {% if not form.emprestimo.condutor or form.emprestimo.condutor_id != form.emprestimo.servidor_id %}
         <div class="form-group">
             <label class="col-lg-3 control-label">
-                Solicitar condutor
+                Selecionar condutor
             </label>
             <div class="col-lg-7">
-                <div class="pull-left">
-                    {{form.solicitar_condutor.errors}}
-                    {{form.solicitar_condutor}}
-                    {% if solcitar_condutor == False %}
-                        Usúario não tem premissão para conduzir
-                    {% endif %}
-                </div>
+                {{form.condutor}}
+                {{form.condutor.errors}}
             </div>
         </div>
+        {% endif %}
         <legend>Origem</legend>
 
         <div class="form-group">
@@ -82,8 +67,7 @@
                 Estado
             </label>
             <div class="col-lg-7">
-                {{form.estado_origem.errors}}
-                {{form.estado_origem}}
+                {{form.emprestimo.rota.cidade_origem.estado.nome}}
             </div>
         </div>
 
@@ -92,8 +76,7 @@
                 Cidade
             </label>
             <div class="col-lg-7">
-                {{form.cidade_origem.errors}}
-                {{form.cidade_origem}}
+                {{form.emprestimo.rota.cidade_origem}}
             </div>
         </div>
 
@@ -102,8 +85,7 @@
                 Endereço
             </label>
             <div class="col-lg-7">
-                {{form.endereco_origem.errors}}
-                {{form.endereco_origem}}
+                {{form.emprestimo.rota.endereco_origem}}
             </div>
         </div>
 
@@ -114,8 +96,7 @@
                 Estado
             </label>
             <div class="col-lg-7">
-                {{form.estado_destino.errors}}
-                {{form.estado_destino}}
+                {{form.emprestimo.rota.cidade_destino.estado.nome}}
             </div>
         </div>
 
@@ -124,8 +105,7 @@
                 Cidade
             </label>
             <div class="col-lg-7">
-                {{form.cidade_destino.errors}}
-                {{form.cidade_destino}}
+                {{form.emprestimo.rota.cidade_destino}}
             </div>
         </div>
 
@@ -134,8 +114,7 @@
                 Endereço
             </label>
             <div class="col-lg-7">
-                {{form.endereco_destino.errors}}
-                {{form.endereco_destino}}
+                {{form.emprestimo.rota.endereco_destino}}
             </div>
         </div>
         <div class="form-group">
@@ -144,15 +123,20 @@
             </label>
             <div class="col-lg-7">
 
-                <label id="alerta"></label>
-                <br>
-                <button type="button"  class="btn btn-default" onclick="buscar_veiculos();">Buscar veículos</button>
-                <br>
-                <div id="veiculos">
-
-                </div>
+                {{form.veiculo}}
+                {{form.veiculo.errors}}
             </div>
+        </div>
 
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Aprovado
+            </label>
+            <div class="col-lg-7">
+
+                {{form.aprovado}}
+                {{form.aprovado.errors}}
+            </div>
         </div>
         <div class="form-group">
             <div class="col-lg-10">
