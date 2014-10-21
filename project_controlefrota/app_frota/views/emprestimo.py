@@ -81,20 +81,58 @@ def consultar(request):
     except:
         page = 1
 
-    autorizacoes = Autorizacao.objects.filter()
+    emprestimos = Emprestimo.objects.filter()
 
     if valor is not None:
-        autorizacoes = autorizacoes.filter(Q(servidor__first_name__icontains=valor) | Q(servidor__last_name__icontains=valor))
+        emprestimos = emprestimos.filter(Q(servidor__first_name__icontains=valor) | Q(servidor__last_name__icontains=valor))
 
-    paginator = Paginator(autorizacoes, settings.NR_REGISTROS_PAGINA)
+    paginator = Paginator(emprestimos, settings.NR_REGISTROS_PAGINA)
 
     try:
-        autorizacoes_page = paginator.page(page)
+        emprestimos_page = paginator.page(page)
     except:
-        autorizacoes_page = paginator.page(paginator.num_pages)
+        emprestimos_page = paginator.page(paginator.num_pages)
 
-    return render(request, 'autorizacao/consulta.html', {'form': form, 'autorizacoes': autorizacoes_page})
+    return render(request, 'emprestimo/consulta_emprestimo.html', {'form': form, 'emprestimos': emprestimos_page})
 
+@group_required(settings.PERM_GRUPO_SERVIDOR)
+def consulta_emp_serv(request):
+
+    valor = None
+
+    if request.method == 'POST':
+        form = FormPesquisa(request.POST)
+
+        if form.is_valid():
+            valor = request.POST['valor']
+
+    elif 'valor' in request.GET:
+        valor = request.GET['valor']
+
+    if valor is None or valor == 'None':
+        form = FormPesquisa()
+    else:
+        data = {'valor': valor}
+        form = FormPesquisa(initial=data)
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    emprestimos = Emprestimo.objects.filter(servidor_id = request.user.id)
+
+    if valor is not None:
+        emprestimos = emprestimos.filter(Q(dt_saida=valor) | Q(dt_devolucao=valor))
+
+    paginator = Paginator(emprestimos, settings.NR_REGISTROS_PAGINA)
+
+    try:
+        emprestimos_page = paginator.page(page)
+    except:
+        emprestimos_page = paginator.page(paginator.num_pages)
+
+    return render(request, 'emprestimo/consulta_emprestimo.html', {'form': form, 'emprestimos': emprestimos_page})
 
 @csrf_exempt
 def veiculos_disponiveis(request):
