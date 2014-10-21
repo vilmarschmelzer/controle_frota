@@ -76,8 +76,10 @@ def solicitar(request):
         print form.errors
 
         if form.is_valid():
+            data = datetime.today()
             autorizacao = Autorizacao()
             autorizacao.cnh = request.POST["cnh"]
+            autorizacao.dt_fim = data + timedelta(days = 365)
             autorizacao.observacao = request.POST["observacao"]
             autorizacao.servidor_id = request.user.id
             autorizacao.save()
