@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<form action="{% url 'editar_marca' marca.id %}" method="POST"> 
+		{% csrf_token %}
+		Nome da marca: <input name = "editar_nome_marca" type="text" value="{{ marca.nome }}" required>
+		Status da marca: <br>
+				Ativar <input name = "editar_status_marca" {% if marca.status == True %}  checked="checked" {% endif %} type="radio" value="1">
+				Desativar <input name = "editar_status_marca" {% if marca.status == False %}  checked="checked" {% endif %}  type="radio" value="0">  
+
+		<input type="submit" value="Alterar">
+	</form>
+{% endblock %}
