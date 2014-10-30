@@ -8,13 +8,13 @@ from django.db import transaction
 @transaction.commit_on_success
 def carga(request):
 
-    grupos_nome = ['Administrador', 'Servidor', 'Chefia']
+    grupos_nome = [(1, 'Administrador'), (2, 'Servidor'), (3, 'Chefia')]
 
     for gp_nome in grupos_nome:
-        gp = Group.objects.filter(name=gp_nome)
+        gp = Group.objects.filter(name=gp_nome[1])
 
         if len(gp) == 0:
-            gp = Group(name=gp_nome)
+            gp = Group(id=gp_nome[0],name=gp_nome[1])
             gp.save()
 
     cpf = '06885813907'
@@ -34,7 +34,7 @@ def carga(request):
 
         adm.save()
 
-        gp = Group.objects.get(name=grupos_nome[0])
+        gp = Group.objects.get(pk=grupos_nome[0][0])
         User(adm.id).groups.add(gp.id)
 
     nome_marcas = ['Volkswagen', 'Chevrolet', 'Toyota',  'Ford', 'Fiat', 'Renault', 'Mercedez', 'Hyundai', 'Mazda', 'Nissan']
