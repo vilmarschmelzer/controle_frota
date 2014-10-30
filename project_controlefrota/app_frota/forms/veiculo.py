@@ -50,3 +50,11 @@ class FormVeiculo(forms.Form):
             'id':'placa'
         })
     )
+
+    ativo = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class':'form-control',
+            'id':'ativo'
+        })
+    )

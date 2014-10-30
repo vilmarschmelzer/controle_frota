@@ -55,7 +55,15 @@
                 {{form.placa}}
             </div>
         </div>
-
+        <div class="form-group">
+            <label for="ativo" class="col-lg-3 control-label">
+                Ativo
+            </label>
+            <div class="col-lg-7">
+                {{form.ativo.errors}}
+                {{form.ativo}}
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-5">
                 <button type="submit" class="btn btn-default pull-right">Salvar</button>

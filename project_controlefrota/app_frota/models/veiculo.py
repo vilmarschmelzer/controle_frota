@@ -8,6 +8,7 @@ class Veiculo(models.Model):
     modelo = models.CharField(max_length=100)
     nome = models.CharField(max_length=100)
     placa = models.CharField(max_length=100)
+    ativo = models.BooleanField(default=True)
 
     def get_veiculos_disponiveis(self, dt_saida, dt_devolucao, not_id=0):
         veiculos = Veiculo.objects.raw('select id from app_frota_veiculo where id not in '

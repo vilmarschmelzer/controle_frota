@@ -73,6 +73,7 @@ def editar(request, veiculo_id):
             veiculo.modelo = request.POST["modelo"]
             veiculo.chassis = request.POST["chassis"]
             veiculo.placa = request.POST["placa"]
+            veiculo.ativo = form.cleaned_data["ativo"]
 
             veiculo.save()
 
@@ -85,7 +86,8 @@ def editar(request, veiculo_id):
             'marca':veiculo.marca_id,
             'modelo':veiculo.modelo,
             'chassis':veiculo.chassis,
-            'placa':veiculo.placa
+            'placa':veiculo.placa,
+            'ativo':veiculo.ativo
         }
 
         form = FormVeiculo(initial=dados_veiculo)
