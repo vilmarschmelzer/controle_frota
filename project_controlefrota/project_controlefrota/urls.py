@@ -38,4 +38,6 @@ urlpatterns = patterns('',
     url(r'^cargainicial/$', 'app_frota.views.carga_inicial.carga', name='carga'),
 
     url(r'^cadastrar-marca/$', 'app_frota.views.marca.cadastrar_marca', name='cadastrar_marca'),
+    url(r'^editar-marca/(?P<id_marca>\d+)/$', 'app_frota.views.marca.editar_marca', name='editar_marca'),
+    url(r'^listar-marcas/$', 'app_frota.views.marca.listar_marcas', name='listar_marcas'),
 )

@@ -77,7 +77,7 @@ def visualizar(request, id):
     return render(request, 'emprestimo/visualizar.html', {'form': form})
 
 
-@group_required(settings.PERM_GRUPO_CHEFIA)
+@group_required(settings.PERM_GRUPO_ADM)
 def consultar(request):
     valor = None
 
