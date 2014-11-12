@@ -1,15 +1,14 @@
 #coding:utf-8
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from app_frota.models import Veiculo
 from app_frota.forms import FormVeiculo
 from app_frota.forms.pesquisa import FormPesquisa
 from decorators.permissoes import group_required
 from django.conf import settings
-from django.contrib.auth.models import User, Group
-from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator
-from django.contrib.auth import logout
+from latex import LatexDocument
+from django.template.loader import render_to_string
 
 
 @group_required(settings.PERM_GRUPO_ADM)
@@ -129,3 +128,101 @@ def consultar(request):
         veiculos_page = paginator.page(paginator.num_pages)
 
     return render(request, 'veiculo/consulta.html', {'form': form, 'veiculos': veiculos_page})
+
+
+def _valor(request):
+    valor = None
+
+    if request.method == 'POST':
+        form = FormPesquisa(request.POST)
+
+        if form.is_valid():
+            valor = request.POST['valor']
+
+    elif 'valor' in request.GET:
+        valor = request.GET['valor']
+
+    return valor
+
+
+def _form(valor):
+    if valor is None or valor == 'None':
+        form = FormPesquisa()
+    else:
+        data = {'valor': valor}
+        form = FormPesquisa(initial=data)
+
+    return form
+
+
+def _consulta(valor):
+
+    sql = 'select a.*, (select count(id) from app_frota_emprestimo where veiculo_id=a.id) as count from app_frota_veiculo a '
+
+    parametros = []
+
+    try:
+        valor = int(valor)
+
+        sql += 'where a.id = %s '
+        parametros.append(valor)
+    except:
+
+        if valor:
+            valor = '%'+valor+'%'
+
+            sql += 'where UPPER(a.nome) like UPPER(%s) or UPPER(a.modelo) like UPPER(%s) or UPPER(a.placa) like UPPER(%s) '
+            parametros.append(valor)
+            parametros.append(valor)
+            parametros.append(valor)
+    sql += 'order by a.nome'
+
+    return Veiculo.objects.raw(sql, parametros)
+
+
+@group_required(settings.PERM_GRUPO_ADM)
+def relatorio(request):
+    valor = _valor(request)
+    form = _form(valor)
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    veiculos = _consulta(valor)
+
+    paginator = Paginator(list(veiculos), settings.NR_REGISTROS_PAGINA)
+
+    try:
+        veiculos_page = paginator.page(page)
+    except:
+        veiculos_page = paginator.page(paginator.num_pages)
+
+    return render(request, 'veiculo/relatorio.html', {'form': form, 'veiculos': veiculos_page})
+
+
+@group_required(settings.PERM_GRUPO_ADM)
+def imprimir_relatorio(request):
+    valor = _valor(request)
+
+    veiculos = _consulta(valor)
+
+
+    veiculos = list(veiculos)
+
+    latex = render_to_string('veiculo/imprimir_relatorio.tex', {'veiculos': veiculos})
+
+    #Transdorma em documento latex
+    tex = LatexDocument(latex.encode('utf-8'))
+
+    #Transforma em pedf
+    pdf = tex.as_pdf()
+
+    response = HttpResponse(pdf, mimetype='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=%s.pdf' % 'relatorio'
+
+    # abre o pdf na propria aba
+    # return HttpResponse(response, mimetype='application/pdf')
+    # baixar o arquivo direto
+    return response

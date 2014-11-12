@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block menuuser %}
+    {% include "login/login_logout.html" %}
+{% endblock %}
+
+
+
+{% block content %}
+	<ol class="breadcrumb">
+		<li><a href="/">Home</a></li>
+		<li class="active"><strong>Relatório empréstimos de veículos</strong></li>
+	</ol>
+
+	<form id="formProcurar" method="post" class="form-inline" action="/relatorio-veiculos/">{% csrf_token %}
+		<div class="row">
+			<div class="col-md-4 col-sm-6 col-xs-12">
+				<div class="input-group">
+					{{ form.valor | add_class:"form-control" }}
+					<span class="input-group-btn">
+						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+					</span>
+				</div>
+			</div>
+            <div class="pull-right">
+                {% if form.valor.value %}
+                    <a id="print_relatorio_servidores" href="/imprimir-relatorio-veiculos/?valor={{form.valor.value}}" class="btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                {% else %}
+                    <a id="print_relatorio_servidores" href="/imprimir-relatorio-veiculos/" class="btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                {% endif %}
+
+            </div>
+		</div>
+	</form>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Veículo</th>
+                <th>Modelo</th>
+                <th>Placa</th>
+                <th>Total empréstimos</th>
+            </tr>
+        </thead>
+        <tbody>
+		{% for veiculo in veiculos %}
+            <tr>
+                <td>{{veiculo.nome}}</td>
+                <td>{{veiculo.modelo}}</td>
+                <td>{{veiculo.placa}}</td>
+                <td>{{veiculo.count}}</td>
+            </tr>
+		{% endfor %}
+        </tbody>
+    </table>
+
+    <ul class="pager">
+   		<li class="previous">
+	    {% if veiculos.has_previous %}
+	    	{% if form.valor.value %}
+	       		<a href="?page={{ veiculos.previous_page_number }}&valor={{form.valor.value}}"> Anterior </a>
+	       	{% else %}
+	       		<a href="?page={{ veiculos.previous_page_number }}"> Anterior </a>
+	       	{% endif %}
+	    {% endif %}
+	    </li>
+
+	    <li class="next">
+	    {% if veiculos.has_next %}
+	    	{% if form.valor.value %}
+	       		<a href="?page={{ veiculos.next_page_number  }}&valor={{form.valor.value}}"> Próxima </a>
+	       	{% else %}
+	       		<a href="?page={{ veiculos.next_page_number  }}"> Próxima </a>
+	       {% endif %}
+	    {% endif %}
+	    </li>
+	</ul>
+
+{% endblock %}

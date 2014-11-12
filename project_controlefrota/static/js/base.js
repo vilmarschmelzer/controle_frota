@@ -112,9 +112,9 @@ function buscar_veiculos(){
     });
 }
 
-$('#usuario').blur(function() {
+    $('#usuario').blur(function() {
 
-	    var url=path+'/cliente/validausuario/'
+	    var url=path+'/cliente/validausuario/';
 
 	    if(document.getElementById("id") != null){
 			console.log($('#id').val());
@@ -135,3 +135,19 @@ $('#usuario').blur(function() {
 	    });
 	});
 
+    $('#pesquisa_valor').blur(function() {
+
+        action = $('#formProcurar').attr('action');
+        href_servidor= '/imprimir-relatorio-servidores/';
+        href_veiculo= '/imprimir-relatorio-veiculos/';
+
+        href = '';
+
+        if(action == '/relatorio-servidores/'){
+            $('#print_relatorio_servidores').attr('href', href_servidor+'?valor='+$('#pesquisa_valor').val());
+        }
+        else{
+            $('#print_relatorio_servidores').attr('href', href_veiculo+'?valor='+$('#pesquisa_valor').val());
+        }
+
+    });

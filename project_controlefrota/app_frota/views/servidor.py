@@ -1,6 +1,7 @@
 #coding:utf-8
-from django.shortcuts import render, redirect
-from app_frota.models import Servidor, Administrador, Autorizacao
+from django.shortcuts import render, redirect, HttpResponse
+from django.template.loader import render_to_string
+from app_frota.models import Servidor, Administrador
 from app_frota.forms import FormCadastraServidor, FormSalvarPerfil
 from decorators.permissoes import group_required
 from django.conf import settings
@@ -10,6 +11,7 @@ from app_frota.forms.pesquisa import FormPesquisa
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib.auth import logout
+from latex import LatexDocument
 
 
 @group_required(settings.PERM_GRUPO_ADM)
@@ -138,6 +140,106 @@ def consultar(request):
         users_page = paginator.page(paginator.num_pages)
 
     return render(request, 'servidor/consulta.html', {'form': form, 'servidores': users_page})
+
+
+def _valor(request):
+    valor = None
+
+    if request.method == 'POST':
+        form = FormPesquisa(request.POST)
+
+        if form.is_valid():
+            valor = request.POST['valor']
+
+    elif 'valor' in request.GET:
+        valor = request.GET['valor']
+
+    return valor
+
+
+def _form(valor):
+    if valor is None or valor == 'None':
+        form = FormPesquisa()
+    else:
+        data = {'valor': valor}
+        form = FormPesquisa(initial=data)
+
+    return form
+
+
+def _consulta(valor):
+
+    sql = 'select a.*, (select count(id) from app_frota_emprestimo where servidor_id=a.user_ptr_id) as count from app_frota_servidor a inner join auth_user b on (a.user_ptr_id=b.id) '
+
+    parametros = []
+
+    try:
+        valor = int(valor)
+
+        sql += 'where a.user_ptr_id = %s '
+        parametros.append(valor)
+    except:
+
+        if valor:
+            valor = '%'+valor+'%'
+
+            sql += 'where UPPER(b.first_name) like UPPER(%s) or UPPER(b.last_name) like UPPER(%s) '
+            parametros.append(valor)
+            parametros.append(valor)
+    sql += 'order by b.first_name'
+
+    servidores = Servidor.objects.raw(sql,parametros)
+
+    return servidores
+
+
+@group_required(settings.PERM_GRUPO_ADM)
+def relatorio(request):
+
+    valor = _valor(request)
+    form = _form(valor)
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    servidores = _consulta(valor)
+
+    paginator = Paginator(list(servidores), settings.NR_REGISTROS_PAGINA)
+
+    try:
+        servidores_page = paginator.page(page)
+    except:
+        servidores_page = paginator.page(paginator.num_pages)
+
+    return render(request, 'servidor/relatorio.html', {'form': form, 'servidores': servidores_page})
+
+
+@group_required(settings.PERM_GRUPO_ADM)
+def imprimir_relatorio(request):
+    valor = _valor(request)
+
+    servidores = _consulta(valor)
+
+
+    servidores = list(servidores)
+
+    latex = render_to_string('servidor/imprimir_relatorio.tex', {'servidores': servidores})
+
+    #Transdorma em documento latex
+    tex = LatexDocument(latex.encode('utf-8'))
+
+    #Transforma em pedf
+    pdf = tex.as_pdf()
+
+    response = HttpResponse(pdf, mimetype='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=%s.pdf' % 'relatorio'
+
+    # abre o pdf na propria aba
+    # return HttpResponse(response, mimetype='application/pdf')
+    # baixar o arquivo direto
+    return response
 
 
 @login_required
