@@ -254,14 +254,14 @@ def salvar_perfil(request):
                 user.set_password(request.POST['confirmar_senha'])
 
             user.first_name = request.POST['nome']
-            user.email = request.POST['email']
+            user.username = request.POST['email']
 
             user.save()
 
             logout(request)
             return redirect('/')
     else:
-        data = {'nome': request.user.first_name, 'email': request.user.email, '': request.user.username}
+        data = {'nome': request.user.first_name, 'email': request.user.username}
         form = FormSalvarPerfil(request.user.id, initial=data)
 
     return render(request, 'servidor/perfil.html', {	'form': form})
