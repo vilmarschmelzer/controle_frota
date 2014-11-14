@@ -18,15 +18,15 @@ from django.utils import simplejson
 @transaction.commit_on_success
 def solicitar(request):
 
-    solcitar_condutor = Servidor().is_conduzir(request.user.id)
+    is_conduzir = Servidor().is_conduzir(request.user.id)
 
     ''' select a.id as id from app_frota_veiculo a inner join app_frota_emprestimo b on (a.id=b.veiculo_id)
     where not b.dt_saida between "2016-02-21 07:50:00" and "2016-02-21 08:49:00" '''
 
     if request.method == 'POST':
 
-        form = FormSolicitar(request.POST['estado_origem'], request.POST['estado_destino'], solcitar_condutor, request.POST['dt_saida'], request.POST['dt_devolucao'], request.POST)
-
+        form = FormSolicitar(request.POST['estado_origem'], request.POST['estado_destino'], is_conduzir, request.POST['dt_saida'], request.POST['dt_devolucao'], request.POST)
+        print request.POST
         if form.is_valid():
             form.get_data_saida()
 
@@ -46,7 +46,7 @@ def solicitar(request):
             if 'veiculo' in request.POST:
                 emprestimo.veiculo_id = request.POST['veiculo']
 
-            if 'solicitar_condutor' not in request.POST:
+            if is_conduzir and not form.cleaned_data['solicitar_condutor']:
                 emprestimo.condutor_id = request.user.id
             emprestimo.servidor_id = request.user.id
 
@@ -54,9 +54,9 @@ def solicitar(request):
 
             return redirect('/')
     else:
-        form = FormSolicitar(None, None, solcitar_condutor, None, None)
+        form = FormSolicitar(None, None, is_conduzir, None, None)
 
-    return render(request, 'emprestimo/solicita.html', {'form': form, 'solcitar_condutor': solcitar_condutor})
+    return render(request, 'emprestimo/solicita.html', {'form': form, 'solcitar_condutor': is_conduzir})
 
 
 @group_required(settings.PERM_GRUPO_ADM)
