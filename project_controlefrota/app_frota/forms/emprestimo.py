@@ -8,8 +8,11 @@ from django.db.models import Q
 
 class FormSolicitar(forms.Form):
 
-    def __init__(self, estado_origem_id, estado_destino_id, solcitar_condutor, *args, **kwargs):
+    def __init__(self, estado_origem_id, estado_destino_id, solcitar_condutor, dt_saida, dt_devolucao, *args, **kwargs):
         super(FormSolicitar, self).__init__(*args, **kwargs)
+
+        self.dt_saida = dt_saida
+        self.dt_devolucao = dt_devolucao
 
         self.fields['dt_saida'] = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'],
             widget=forms.DateTimeInput(attrs={
@@ -88,6 +91,23 @@ class FormSolicitar(forms.Form):
             widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'endereco_destino'})
         )
 
+
+        list_veiculos = []
+
+        if self.dt_saida and self.dt_devolucao:
+            list_veiculos = list(Veiculo().get_veiculos_disponiveis(self.dt_saida, self.dt_devolucao))
+
+            if len(list_veiculos) > 0:
+                list_veiculos = [ (o.id, o.nome) for o in list(Veiculo().get_veiculos_disponiveis(self.dt_saida, self.dt_devolucao))]
+            else:
+                list_veiculos = []
+
+
+
+        self.fields['veiculo'] = forms.ChoiceField(
+            widget=forms.Select(attrs={'class': 'form-control'}),
+            choices=list_veiculos)
+
     def get_data_saida(self):
         cleaned_data = self.cleaned_data
 
@@ -118,6 +138,14 @@ class FormSolicitar(forms.Form):
             pass
 
         return cleaned_data
+
+    def clean_veiculo(self):
+
+        veiculo = self.cleaned_data['veiculo']
+        print 'teste ok : ', veiculo
+
+        return veiculo
+
 
 from django.utils.safestring import mark_safe
 class HorizontalRadioRenderer(forms.RadioSelect.renderer):
