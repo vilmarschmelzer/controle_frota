@@ -1,7 +1,6 @@
 #coding: utf-8
 from django import forms
 from app_frota.models import Estado, Cidade, Veiculo, Emprestimo, Servidor
-from django.forms.extras.widgets import SelectDateWidget
 from django.forms.util import ErrorList
 from datetime import datetime
 from django.db.models import Q
@@ -12,29 +11,17 @@ class FormSolicitar(forms.Form):
     def __init__(self, estado_origem_id, estado_destino_id, solcitar_condutor, *args, **kwargs):
         super(FormSolicitar, self).__init__(*args, **kwargs)
 
-        self.fields['dt_saida'] = forms.DateField(
-            widget=SelectDateWidget(attrs={
-                'id': 'dt_saida'
-            })
-        )
-
-        self.fields['hora_saida'] = forms.TimeField(
-            widget=forms.TimeInput(format='%H:%M', attrs={
+        self.fields['dt_saida'] = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'],
+            widget=forms.DateTimeInput(attrs={
                 'class': 'form-control',
                 'id': 'dt_saida'
             })
         )
 
-        self.fields['dt_devolucao'] = forms.DateField(
-            widget=SelectDateWidget(attrs={
+        self.fields['dt_devolucao'] = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'],
+            widget=forms.DateTimeInput(attrs={
+                'class': 'form-control',
                 'id': 'dt_devolucao'
-            })
-        )
-
-        self.fields['hora_devolucao'] = forms.TimeField(
-            widget=forms.TimeInput(format='%H:%M', attrs={
-                'class': 'form-control',
-                'id': 'hora_devolucao'
             })
         )
 
@@ -103,15 +90,16 @@ class FormSolicitar(forms.Form):
 
     def get_data_saida(self):
         cleaned_data = self.cleaned_data
+
         try:
-            return datetime.strptime('%s %s' % (cleaned_data['dt_saida'], cleaned_data['hora_saida']),'%Y-%m-%d %H:%M:00')
+            return cleaned_data['dt_saida']
         except:
             return None
 
     def get_data_devolucao(self):
         cleaned_data = self.cleaned_data
         try:
-            return datetime.strptime('%s %s' % (cleaned_data['dt_devolucao'], cleaned_data['hora_devolucao']), '%Y-%m-%d %H:%M:00')
+            return cleaned_data['dt_devolucao']
         except:
 
             return None
