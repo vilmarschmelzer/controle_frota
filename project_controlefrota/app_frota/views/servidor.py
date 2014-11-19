@@ -261,7 +261,7 @@ def salvar_perfil(request):
             logout(request)
             return redirect('/')
     else:
-        data = {'nome': request.user.first_name, 'email': request.user.username}
+        data = {'nome': request.user.first_name, 'email': request.user.username, 'auto':request.user.auto_id}
         form = FormSalvarPerfil(request.user.id, initial=data)
 
-    return render(request, 'servidor/perfil.html', {	'form': form})
+    return render(request, 'servidor/perfil.html', {'form': form})
