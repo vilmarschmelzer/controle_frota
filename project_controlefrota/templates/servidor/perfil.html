@@ -12,6 +12,14 @@
 		    {{ msg_erro }}
 	    </div>
     {% endif %}
+    <div class="container">
+        <div class="row">
+            {% if autorizacao %}
+                <h4>Sua autorização para dirigir vence na data: {{autorizacao.dt_fim}}</h4>
+            {%endif%}
+            <br><br>
+        </div>
+    </div>
     <form method="post" class="form-horizontal" action="/perfil/">
         {% csrf_token %}
         <div class="form-group">
@@ -65,12 +73,8 @@
                 <button type="submit" class="btn btn-default pull-right">Salvar</button>
             </div>
         </div>
+
 	</form>
 
-    <div class="container">
-        {% if auto %}
-            {{auto}}
-        {endif}
 
-    </div>
 {% endblock %}

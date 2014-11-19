@@ -15,7 +15,7 @@
 		    {{ msg_erro }}
 	    </div>
     {% endif %}
-    {{ servidor.first_name }} {{ servidor.last_name }}
+    <h1>{{ servidor.first_name }} {{ servidor.last_name }}</h1>
     <form method="post" class="form-horizontal" action="/editar-servidor/{{ servidor.id }}/">
         {% csrf_token %}
         <div class="checkbox">

@@ -245,6 +245,8 @@ def imprimir_relatorio(request):
 @login_required
 def salvar_perfil(request):
 
+    autorizacao = Servidor().get_autorizacao(request.user.id)
+
     if request.method == 'POST':
         form = FormSalvarPerfil(request.user.id, request.POST)
 
@@ -261,7 +263,9 @@ def salvar_perfil(request):
             logout(request)
             return redirect('/')
     else:
-        data = {'nome': request.user.first_name, 'email': request.user.username, 'auto':request.user.auto_id}
+        data = {'nome': request.user.first_name, 'email': request.user.username}
         form = FormSalvarPerfil(request.user.id, initial=data)
 
-    return render(request, 'servidor/perfil.html', {'form': form})
+    return render(request, 'servidor/perfil.html', {'form': form, 'autorizacao':autorizacao})
+
+
