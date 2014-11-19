@@ -76,6 +76,43 @@ def visualizar(request, id):
 
     return render(request, 'emprestimo/visualizar.html', {'form': form})
 
+@group_required(settings.PERM_GRUPO_SERVIDOR)
+@transaction.commit_on_success
+def visualizar_emprestimo_serv(request, id):
+
+    emprestimo = Emprestimo.objects.get(id = id)
+    if request.method == 'POST':
+        form = FormSolicitar(request.POST['estado_origem'], request.POST['estado_destino'], False, request.POST)
+
+        if form.is_valid():
+
+            rota = emprestimo.rota
+            rota.cidade_origem_id = request.POST['cidade_origem']
+            rota.endereco_origem = request.POST['endereco_origem']
+            rota.cidade_destino_id = request.POST['cidade_destino']
+            rota.endereco_destino = request.POST['endereco_destino']
+            rota.save()
+
+            emprestimo.rota = rota
+            emprestimo.dt_saida = form.get_data_saida()
+            emprestimo.dt_devolucao = form.get_data_devolucao()
+            emprestimo.observacao = request.POST['observacao']
+
+            form.save()
+
+            return redirect('/consultar-emprestimos_serv/')
+
+    else:
+
+        data = {'dt_saida':emprestimo.dt_saida,
+                'dt_devolucao':emprestimo.dt_devolucao,
+                'observacao':emprestimo.observacao,
+                'origem':emprestimo.rota.endereco_origem,
+                'destino':emprestimo.rota.endereco_destino,
+                }
+        form = FormSolicitar(emprestimo.rota.cidade_origem.estado_id, emprestimo.rota.cidade_destino.estado_id, False, initial=data)
+
+    return render(request, 'emprestimo/solicita.html', {'form': form,})
 
 @group_required(settings.PERM_GRUPO_ADM)
 def consultar(request):
@@ -152,7 +189,7 @@ def consulta_emp_serv(request):
     except:
         emprestimos_page = paginator.page(paginator.num_pages)
 
-    return render(request, 'emprestimo/consulta_emprestimo.html', {'form': form, 'emprestimos': emprestimos_page})
+    return render(request, 'emprestimo/consulta_emprestimo_serv.html', {'form': form, 'emprestimos': emprestimos_page})
 
 @csrf_exempt
 def veiculos_disponiveis(request):
