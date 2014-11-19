@@ -12,8 +12,17 @@
 		    {{ msg_erro }}
 	    </div>
     {% endif %}
-    <form class="form-horizontal" action="/solicitar-emprestimo/" method="post"
+        {% if bloqueado_editar %}
+             <div class="alert alert-danger">
+		        Você não pode editar este empréstimo pois já excedeu a data de saída!
+	        </div>
+        {% endif %}
+        {% if form.emprestimo_id %}
+            <form class="form-horizontal" action="/visualizar-emprestimo_serv/{{form.emprestimo_id}}/" method="post"
         role="form">
+        {% else %}
+            <form class="form-horizontal" action="/solicitar-emprestimo/" method="post" role="form">
+        {% endif %}
         {% csrf_token %}
         <div class="form-group">
             <label class="col-lg-3 control-label">
@@ -129,10 +138,12 @@
 
                 <label id="alerta">{{form.veiculo.errors}}</label>
                 <br>
+
                 <button type="button"  class="btn btn-default" onclick="buscar_veiculos();">Buscar veículos</button>
                 <br>
 
                 <div id="veiculos">
+                    {{veiculo}}
 
                 </div>
 
@@ -141,9 +152,12 @@
         </div>
         <div class="form-group">
             <div class="col-lg-10">
-                <button type="submit" class="btn btn-info pull-right">
-                    Enviar
-                </button>
+                {% if not bloqueado_editar %}
+
+                    <button type="submit" class="btn btn-info pull-right">
+                        Enviar
+                    </button>
+                {% endif %}
             </div>
         </div>
     </form>

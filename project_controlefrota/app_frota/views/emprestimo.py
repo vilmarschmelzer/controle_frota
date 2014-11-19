@@ -26,7 +26,7 @@ def solicitar(request):
     if request.method == 'POST':
 
         form = FormSolicitar(request.POST['estado_origem'], request.POST['estado_destino'], is_conduzir, request.POST['dt_saida'], request.POST['dt_devolucao'], request.POST)
-        print request.POST
+
         if form.is_valid():
             form.get_data_saida()
 
@@ -81,8 +81,11 @@ def visualizar(request, id):
 def visualizar_emprestimo_serv(request, id):
 
     emprestimo = Emprestimo.objects.get(id = id)
+    bloqueado_editar = datetime.now() > emprestimo.dt_saida
     if request.method == 'POST':
-        form = FormSolicitar(request.POST['estado_origem'], request.POST['estado_destino'], False, request.POST)
+
+        form = FormSolicitar(request.POST['estado_origem'], request.POST['estado_destino'], False, request.POST['dt_saida'], request.POST['dt_devolucao'], request.POST)
+        form.emprestimo_id = emprestimo.id
 
         if form.is_valid():
 
@@ -97,22 +100,31 @@ def visualizar_emprestimo_serv(request, id):
             emprestimo.dt_saida = form.get_data_saida()
             emprestimo.dt_devolucao = form.get_data_devolucao()
             emprestimo.observacao = request.POST['observacao']
+            emprestimo.veiculo_id = request.POST['veiculo']
 
-            form.save()
+            emprestimo.save()
 
             return redirect('/consultar-emprestimos_serv/')
 
     else:
 
-        data = {'dt_saida':emprestimo.dt_saida,
-                'dt_devolucao':emprestimo.dt_devolucao,
+
+        data = {'dt_saida':emprestimo.dt_saida.strftime('%d/%m/%Y %H:%M'),
+                'dt_devolucao':emprestimo.dt_devolucao.strftime('%d/%m/%Y %H:%M'),
                 'observacao':emprestimo.observacao,
                 'origem':emprestimo.rota.endereco_origem,
                 'destino':emprestimo.rota.endereco_destino,
+                'cidade_origem':emprestimo.rota.cidade_origem,
+                'cidade_destino':emprestimo.rota.cidade_destino,
+                'estado_origem':emprestimo.rota.cidade_origem.estado_id,
+                'estado_destino':emprestimo.rota.cidade_destino.estado_id,
+                'endereco_origem':emprestimo.rota.endereco_origem,
+                'endereco_destino':emprestimo.rota.endereco_destino,
+                'veiculo':emprestimo.veiculo_id,
                 }
-        form = FormSolicitar(emprestimo.rota.cidade_origem.estado_id, emprestimo.rota.cidade_destino.estado_id, False, initial=data)
-
-    return render(request, 'emprestimo/solicita.html', {'form': form,})
+        form = FormSolicitar(emprestimo.rota.cidade_origem.estado_id, emprestimo.rota.cidade_destino.estado_id, False, emprestimo.dt_saida, emprestimo.dt_devolucao, initial=data)
+        form.emprestimo_id = emprestimo.id
+    return render(request, 'emprestimo/solicita.html', {'form': form, 'bloqueado_editar':bloqueado_editar, 'veiculo': emprestimo.veiculo})
 
 @group_required(settings.PERM_GRUPO_ADM)
 def consultar(request):
