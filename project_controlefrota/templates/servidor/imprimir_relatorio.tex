@@ -1,0 +1,27 @@
+\documentclass[a4paper]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\renewcommand{\rmdefault}{phv} % Arial
+\renewcommand{\sfdefault}{phv} % Arial
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Relatório de servidores }
+
+\begin{table}[h]
+\begin{tabular}{p{5cm}|p{4cm}|p{4cm}|c}                    					  \hline
+Usuário & Nome & Sobrenome & Total emprétimos \\\hline
+{%for servidor in servidores %}
+ {{servidor.username}}  & {{servidor.first_name}} & {{servidor.last_name}} & {{servidor.count}} \\
+{%endfor%}
+\end{tabular}
+\end{table}
+\end{document}

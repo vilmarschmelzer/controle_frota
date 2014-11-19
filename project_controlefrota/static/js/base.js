@@ -1,6 +1,9 @@
 $(document).ready(function(){
 	path = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
 
+    $('input[name=dt_saida]').datetimepicker({format:'d/m/Y H:i', lang:'pt', step:10});
+    $('input[name=dt_devolucao]').datetimepicker({format:'d/m/Y H:i', lang:'pt', step:10});
+
     $('#estado_origem').change(function(){
 
         $.ajax({
@@ -48,7 +51,7 @@ $(document).ready(function(){
 
             console.log(data);
 
-            html += '<option selected="selected" value="">Selecione uma Cidade</option>'
+            html += '<option selected="selected" value="">Selecione uma Cidade</option>';
             $(cidade).each(function(key,val){
                 html += '<option value="'+val.pk+'">'+val['fields']['nome']+'</option>';
             });
@@ -68,16 +71,8 @@ function buscar_veiculos(){
 
     var data = {};
 
-    data["dt_devolucao_day"] = $("select[name=dt_devolucao_day]").val();
-
-    data['dt_devolucao_month'] = $("select[name=dt_devolucao_month]").val();
-    data['dt_devolucao_year'] = $("select[name=dt_devolucao_year]").val();
-    data['hora_devolucao'] = $("input[name=hora_devolucao]").val();
-
-    data['dt_saida_day'] = $("select[name=dt_saida_day]").val();
-    data['dt_saida_month'] = $("select[name=dt_saida_month]").val();
-    data['dt_saida_year'] = $("select[name=dt_saida_year]").val();
-    data['hora_saida'] = $("input[name=hora_saida]").val();
+    data["dt_devolucao"] = $("input[name=dt_devolucao]").val();
+    data['dt_saida'] = $("input[name=dt_saida]").val();
 
     $.ajax({
 
@@ -112,9 +107,9 @@ function buscar_veiculos(){
     });
 }
 
-$('#usuario').blur(function() {
+    $('#usuario').blur(function() {
 
-	    var url=path+'/cliente/validausuario/'
+	    var url=path+'/cliente/validausuario/';
 
 	    if(document.getElementById("id") != null){
 			console.log($('#id').val());
@@ -135,3 +130,19 @@ $('#usuario').blur(function() {
 	    });
 	});
 
+    $('#pesquisa_valor').blur(function() {
+
+        action = $('#formProcurar').attr('action');
+        href_servidor= '/imprimir-relatorio-servidores/';
+        href_veiculo= '/imprimir-relatorio-veiculos/';
+
+        href = '';
+
+        if(action == '/relatorio-servidores/'){
+            $('#print_relatorio_servidores').attr('href', href_servidor+'?valor='+$('#pesquisa_valor').val());
+        }
+        else{
+            $('#print_relatorio_servidores').attr('href', href_veiculo+'?valor='+$('#pesquisa_valor').val());
+        }
+
+    });

@@ -24,15 +24,7 @@
                 {{form.dt_saida}}
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-lg-3 control-label">
-                Hora saída
-            </label>
-            <div class="col-lg-7">
-                {{form.hora_saida.errors}}
-                {{form.hora_saida}}
-            </div>
-        </div>
+
         <div class="form-group">
             <label class="col-lg-3 control-label">
                 Data devolução
@@ -40,15 +32,6 @@
             <div class="col-lg-7">
                 {{form.dt_devolucao.errors}}
                 {{form.dt_devolucao}}
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-lg-3 control-label">
-                Hora devolução
-            </label>
-            <div class="col-lg-7">
-                {{form.hora_devolucao.errors}}
-                {{form.hora_devolucao}}
             </div>
         </div>
 
@@ -144,13 +127,15 @@
             </label>
             <div class="col-lg-7">
 
-                <label id="alerta"></label>
+                <label id="alerta">{{form.veiculo.errors}}</label>
                 <br>
                 <button type="button"  class="btn btn-default" onclick="buscar_veiculos();">Buscar veículos</button>
                 <br>
+
                 <div id="veiculos">
 
                 </div>
+
             </div>
 
         </div>

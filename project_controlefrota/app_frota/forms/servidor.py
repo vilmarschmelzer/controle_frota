@@ -2,6 +2,7 @@
 
 from django import forms
 from django.contrib.auth.models import Group, User
+from app_frota.models import Servidor
 from django.db.models import Q
 
 
@@ -41,6 +42,26 @@ class FormCadastraServidor(forms.Form):
     grupos = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={
             'class':'form-control', 'id':'grupos'}))
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+
+        existe = User.objects.filter(Q(username=email))
+
+        if len(existe) > 0:
+            raise forms.ValidationError('Usuário já cadastrado')
+
+        return email
+
+    def clean_cpf(self):
+        cpf = self.cleaned_data['cpf']
+
+        existe = Servidor.objects.filter(Q(cpf=cpf))
+
+        if len(existe) > 0:
+            raise forms.ValidationError('CPF já cadastrado')
+
+        return cpf
+
 
 class FormSalvarPerfil(FormCadastraServidor):
 
@@ -59,23 +80,24 @@ class FormSalvarPerfil(FormCadastraServidor):
         super(FormSalvarPerfil, self).__init__(*args, **kwargs)
         self.fields.pop('grupos')
         self.fields.pop('cpf')
+
         self.id = id
 
-    def clean_usuario(self):
-        usuario = self.cleaned_data['usuario']
+    def clean_email(self):
+        email = self.cleaned_data['email']
 
-        existe = User.objects.filter(Q(username=usuario), ~Q(id=self.id))
+        existe = User.objects.filter(Q(username=email), ~Q(id=self.id))
 
         if len(existe) > 0:
             raise forms.ValidationError('Usuário já cadastrado')
 
-        return usuario
+        return email
 
     def clean_senha(self):
         senha = self.cleaned_data['senha']
 
         if self.id > 0:
-            user = User.objects.filter(id=self.id, username=self.cleaned_data['email']).get()
+            user = User.objects.get(pk=self.id)
             if user.check_password(self.cleaned_data['senha']) is False:
                 raise forms.ValidationError('Senha invalida!')
 
