@@ -142,8 +142,6 @@ class FormSolicitar(forms.Form):
     def clean_veiculo(self):
 
         veiculo = self.cleaned_data['veiculo']
-        print 'teste ok : ', veiculo
-
         return veiculo
 
 

@@ -29,7 +29,7 @@
 	<div class="list-group">
 		{% for emprestimo in emprestimos %}
 			<div class="list-group-item">
-				<h4 class="list-group-item-heading">{{ emprestimo.nome }} - {{ emprestimo.servidor }}
+				<h4 class="list-group-item-heading">{{ emprestimo.dt_saida|date:"d/m/Y H:i" }} - {{ emprestimo.servidor }}
                     <a href="/visualizar-emprestimo/{{ emprestimo.id }}/">
 						<span class="glyphicon glyphicon-edit pull-right" style="margin-left:10px;"></span>
 					</a>

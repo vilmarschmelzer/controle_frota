@@ -118,7 +118,19 @@ def consultar(request):
     except:
         page = 1
 
-    veiculos = Veiculo.objects.filter(~Q(id=valor))
+    if valor:
+
+        id = 0
+
+        try:
+            id = int(valor)
+        except:
+            pass
+
+        veiculos = Veiculo.objects.filter(Q(id=id)|Q(nome__icontains=valor)|Q(marca__nome__icontains=valor)|Q(modelo__icontains=valor)|Q(placa__icontains=valor))
+    else:
+        veiculos = Veiculo.objects.all()
+
 
     paginator = Paginator(veiculos, settings.NR_REGISTROS_PAGINA)
 
